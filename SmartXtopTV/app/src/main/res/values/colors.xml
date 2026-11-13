@@ -1,0 +1,10 @@
+<resources>
+    <color name="black">#0B0B0B</color>
+    <color name="sidebar_bg">#121212</color>
+    <color name="card_bg">#1B1B1B</color>
+    <color name="red">#E50914</color>
+    <color name="white">#FFFFFF</color>
+    <color name="gray">#AAAAAA</color>
+    <color name="accent_blue">#4FC3F7</color>
+    <color name="accent_green">#4CAF50</color>
+</resources>

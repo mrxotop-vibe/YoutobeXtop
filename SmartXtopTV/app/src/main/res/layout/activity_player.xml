@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <com.google.android.exoplayer2.ui.StyledPlayerView
+        android:id="@+id/player_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusable="true"
+        app:use_controller="false"
+        app:resize_mode="fit"
+        app:surface_type="surface_view" />
+
+    <!-- SmartTube Style Player HUD -->
+    <LinearLayout
+        android:id="@+id/player_hud"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
+        android:background="#D90B0B0B"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="16dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txt_video_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txt_video_channel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:textColor="@color/gray"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txt_player_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:background="#263238"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:text="720p"
+                android:textColor="@color/accent_green"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progress_playback"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="6dp"
+            android:layout_marginTop="8dp"
+            android:max="1000"
+            android:progress="0" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="8dp">
+
+            <TextView
+                android:id="@+id/txt_time_info"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="00:00 / 00:00"
+                android:textColor="#CCCCCC"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btn_prev_video"
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:text="⏮ Trước"
+                android:textAllCaps="false"
+                android:textSize="12sp"
+                android:textColor="@color/white"
+                android:background="@drawable/card_focus_selector"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:layout_marginEnd="6dp"
+                android:focusable="true" />
+
+            <Button
+                android:id="@+id/btn_play_pause"
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:text="⏯ Phát/Dừng"
+                android:textAllCaps="false"
+                android:textSize="12sp"
+                android:textColor="@color/white"
+                android:background="@drawable/card_focus_selector"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:layout_marginEnd="6dp"
+                android:focusable="true" />
+
+            <Button
+                android:id="@+id/btn_next_video"
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:text="⏭ Tiếp"
+                android:textAllCaps="false"
+                android:textSize="12sp"
+                android:textColor="@color/white"
+                android:background="@drawable/card_focus_selector"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:layout_marginEnd="6dp"
+                android:focusable="true" />
+
+            <Button
+                android:id="@+id/btn_quality"
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:text="Chất lượng"
+                android:textAllCaps="false"
+                android:textSize="12sp"
+                android:textColor="@color/accent_blue"
+                android:background="@drawable/card_focus_selector"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:layout_marginEnd="6dp"
+                android:focusable="true" />
+
+            <Button
+                android:id="@+id/btn_speed"
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:text="1.0x"
+                android:textAllCaps="false"
+                android:textSize="12sp"
+                android:textColor="@color/white"
+                android:background="@drawable/card_focus_selector"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:focusable="true" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- SponsorBlock Notification -->
+    <TextView
+        android:id="@+id/txt_sponsor_hud"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_margin="24dp"
+        android:background="#CC1B5E20"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <!-- Center Loading -->
+    <LinearLayout
+        android:id="@+id/loading_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="#BB000000"
+        android:padding="22dp">
+
+        <ProgressBar
+            android:id="@+id/player_loading"
+            android:layout_width="52dp"
+            android:layout_height="52dp" />
+
+        <TextView
+            android:id="@+id/txt_loading_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Đang tải luồng video..."
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <!-- Native Error Box -->
+    <LinearLayout
+        android:id="@+id/error_container"
+        android:layout_width="460dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="#EE181818"
+        android:padding="24dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/txt_error_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:layout_marginBottom="16dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_retry"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:text="Thử lại"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:background="@drawable/card_focus_selector"
+                android:paddingStart="18dp"
+                android:paddingEnd="18dp"
+                android:layout_marginEnd="10dp"
+                android:focusable="true" />
+
+            <Button
+                android:id="@+id/btn_close_player"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:text="Quay lại"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:background="@drawable/card_focus_selector"
+                android:paddingStart="18dp"
+                android:paddingEnd="18dp"
+                android:focusable="true" />
+        </LinearLayout>
+    </LinearLayout>
+
+</FrameLayout>

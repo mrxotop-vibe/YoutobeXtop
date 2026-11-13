@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:background="@color/black">
+
+    <!-- SmartTube / TizenCobalt Left Sidebar -->
+    <LinearLayout
+        android:layout_width="185dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/sidebar_bg"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SmartXtop"
+            android:textColor="@color/red"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingTop="4dp"
+            android:paddingBottom="10dp" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/nav_login"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="8dp"
+                    android:text="👤 Đăng nhập"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    android:background="@drawable/sidebar_item_selector"
+                    android:layout_marginBottom="4dp"
+                    android:focusable="true" />
+
+                <Button
+                    android:id="@+id/nav_home"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="8dp"
+                    android:text="🏠 Trang chủ"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    android:background="@drawable/sidebar_item_selector"
+                    android:layout_marginBottom="4dp"
+                    android:focusable="true" />
+
+                <Button
+                    android:id="@+id/nav_trending"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="8dp"
+                    android:text="🔥 Thịnh hành"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    android:background="@drawable/sidebar_item_selector"
+                    android:layout_marginBottom="4dp"
+                    android:focusable="true" />
+
+                <Button
+                    android:id="@+id/nav_subs"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="8dp"
+                    android:text="📺 Kênh đăng ký"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    android:background="@drawable/sidebar_item_selector"
+                    android:layout_marginBottom="4dp"
+                    android:focusable="true" />
+
+                <Button
+                    android:id="@+id/nav_music"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="8dp"
+                    android:text="🎵 Âm nhạc"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    android:background="@drawable/sidebar_item_selector"
+                    android:layout_marginBottom="4dp"
+                    android:focusable="true" />
+
+                <Button
+                    android:id="@+id/nav_gaming"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="8dp"
+                    android:text="🎮 Giải trí / Game"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    android:background="@drawable/sidebar_item_selector"
+                    android:layout_marginBottom="4dp"
+                    android:focusable="true" />
+
+                <Button
+                    android:id="@+id/nav_history"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="8dp"
+                    android:text="🕘 Lịch sử xem"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    android:background="@drawable/sidebar_item_selector"
+                    android:layout_marginBottom="4dp"
+                    android:focusable="true" />
+
+                <Button
+                    android:id="@+id/nav_settings"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="start|center_vertical"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="8dp"
+                    android:text="⚙️ Cài đặt"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    android:background="@drawable/sidebar_item_selector"
+                    android:focusable="true" />
+
+            </LinearLayout>
+        </ScrollView>
+
+        <TextView
+            android:id="@+id/txt_sidebar_badge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Android 5.1+ Native"
+            android:textColor="@color/gray"
+            android:textSize="11sp"
+            android:gravity="center"
+            android:paddingTop="6dp" />
+    </LinearLayout>
+
+    <!-- Right Main Panel -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <!-- Quick Search Bar -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <EditText
+                android:id="@+id/edit_search"
+                android:layout_width="0dp"
+                android:layout_height="38dp"
+                android:layout_weight="1"
+                android:background="#202020"
+                android:hint="@string/search_hint"
+                android:textColor="@color/white"
+                android:textColorHint="@color/gray"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:textSize="13sp"
+                android:singleLine="true"
+                android:imeOptions="actionSearch"
+                android:focusable="true" />
+
+            <Button
+                android:id="@+id/btn_search"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:layout_marginStart="8dp"
+                android:text="Tìm kiếm"
+                android:textAllCaps="false"
+                android:textSize="13sp"
+                android:textColor="@color/white"
+                android:background="@drawable/card_focus_selector"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:focusable="true" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/txt_section_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="🏠 Trang chủ"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txt_status_pills"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SponsorBlock ✓  |  720p"
+                android:textColor="@color/accent_green"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_videos"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingBottom="8dp" />
+
+            <ProgressBar
+                android:id="@+id/progress_loading"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+        </FrameLayout>
+    </LinearLayout>
+
+</LinearLayout>
