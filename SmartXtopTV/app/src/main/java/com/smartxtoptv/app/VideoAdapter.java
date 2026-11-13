@@ -45,7 +45,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
         holder.txtTitle.setText(item.getTitle());
         holder.txtUploader.setText(item.getUploader());
 
-        String dur = item.getDurationText();
+        String dur = item.getDuration();
         if (dur != null && !dur.isEmpty()) {
             holder.txtDuration.setVisibility(View.VISIBLE);
             holder.txtDuration.setText(dur);
