@@ -30,7 +30,12 @@ public class SettingsActivity extends AppCompatActivity {
         Button btnBack = findViewById(R.id.btn_settings_back);
 
         btnQuality.setOnClickListener(v -> {
-            int next = (config.getDefaultQuality() + 1) % 3;
+            int cur = config.getDefaultQuality();
+            int next;
+            if (cur == AppConfig.QUALITY_1080P) next = AppConfig.QUALITY_720P;
+            else if (cur == AppConfig.QUALITY_720P) next = AppConfig.QUALITY_HLS_AUTO;
+            else if (cur == AppConfig.QUALITY_HLS_AUTO) next = AppConfig.QUALITY_360P;
+            else next = AppConfig.QUALITY_1080P;
             config.setDefaultQuality(next);
             refreshLabels();
         });

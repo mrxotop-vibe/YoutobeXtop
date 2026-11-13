@@ -51,6 +51,10 @@ public class DownloaderImpl extends Downloader {
         return instance;
     }
 
+    public OkHttpClient getClient() {
+        return client;
+    }
+
     @Override
     public Response execute(Request request) throws IOException, ReCaptchaException {
         String httpMethod = request.httpMethod();

@@ -197,12 +197,17 @@ public class PlayerActivity extends AppCompatActivity {
 
             @Override
             public void onPlayerError(@NonNull PlaybackException error) {
+                String failedLabel = (candidateIndex >= 0 && candidateIndex < candidates.size())
+                        ? candidates.get(candidateIndex).label : "";
                 candidateIndex++;
                 if (candidateIndex < candidates.size()) {
+                    Toast.makeText(PlayerActivity.this,
+                            "Không phát được " + failedLabel + " -> chuyển " + candidates.get(candidateIndex).label,
+                            Toast.LENGTH_SHORT).show();
                     playNextCandidate();
                 } else {
                     showNativeError("ExoPlayer không phát được nguồn video ("
-                            + error.getErrorCodeName() + ").\nHãy bấm 'Thử lại' hoặc chọn chất lượng khác.");
+                            + error.getErrorCodeName() + ").\nHãy bấm 'Thử lại' hoặc đổi chất lượng trong Cài đặt.");
                 }
             }
         });

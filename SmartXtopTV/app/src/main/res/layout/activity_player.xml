@@ -14,18 +14,18 @@
         app:resize_mode="fit"
         app:surface_type="surface_view" />
 
-    <!-- SmartTube Style Player HUD -->
+    <!-- SmartTube Style Player HUD (Big Living-Room Font) -->
     <LinearLayout
         android:id="@+id/player_hud"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:orientation="vertical"
-        android:background="#D90B0B0B"
-        android:paddingStart="24dp"
-        android:paddingEnd="24dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="16dp"
+        android:background="#E60B0B0B"
+        android:paddingStart="28dp"
+        android:paddingEnd="28dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="20dp"
         android:visibility="gone">
 
         <LinearLayout
@@ -47,31 +47,32 @@
                     android:singleLine="true"
                     android:ellipsize="end"
                     android:textColor="@color/white"
-                    android:textSize="16sp"
+                    android:textSize="22sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/txt_video_channel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
                     android:singleLine="true"
-                    android:textColor="@color/gray"
-                    android:textSize="12sp" />
+                    android:textColor="#CCCCCC"
+                    android:textSize="17sp" />
             </LinearLayout>
 
             <TextView
                 android:id="@+id/txt_player_mode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="12dp"
                 android:background="#263238"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:text="720p"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:text="1080p"
                 android:textColor="@color/accent_green"
-                android:textSize="12sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -79,8 +80,8 @@
             android:id="@+id/progress_playback"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
-            android:layout_height="6dp"
-            android:layout_marginTop="8dp"
+            android:layout_height="8dp"
+            android:layout_marginTop="12dp"
             android:max="1000"
             android:progress="0" />
 
@@ -89,7 +90,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="12dp">
 
             <TextView
                 android:id="@+id/txt_time_info"
@@ -97,76 +98,81 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="00:00 / 00:00"
-                android:textColor="#CCCCCC"
-                android:textSize="12sp" />
+                android:textColor="#E0E0E0"
+                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/btn_prev_video"
                 android:layout_width="wrap_content"
-                android:layout_height="34dp"
+                android:layout_height="46dp"
                 android:text="⏮ Trước"
                 android:textAllCaps="false"
-                android:textSize="12sp"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 android:textColor="@color/white"
                 android:background="@drawable/card_focus_selector"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:layout_marginEnd="6dp"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:layout_marginEnd="8dp"
                 android:focusable="true" />
 
             <Button
                 android:id="@+id/btn_play_pause"
                 android:layout_width="wrap_content"
-                android:layout_height="34dp"
+                android:layout_height="46dp"
                 android:text="⏯ Phát/Dừng"
                 android:textAllCaps="false"
-                android:textSize="12sp"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 android:textColor="@color/white"
                 android:background="@drawable/card_focus_selector"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:layout_marginEnd="6dp"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:layout_marginEnd="8dp"
                 android:focusable="true" />
 
             <Button
                 android:id="@+id/btn_next_video"
                 android:layout_width="wrap_content"
-                android:layout_height="34dp"
+                android:layout_height="46dp"
                 android:text="⏭ Tiếp"
                 android:textAllCaps="false"
-                android:textSize="12sp"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 android:textColor="@color/white"
                 android:background="@drawable/card_focus_selector"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:layout_marginEnd="6dp"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:layout_marginEnd="8dp"
                 android:focusable="true" />
 
             <Button
                 android:id="@+id/btn_quality"
                 android:layout_width="wrap_content"
-                android:layout_height="34dp"
+                android:layout_height="46dp"
                 android:text="Chất lượng"
                 android:textAllCaps="false"
-                android:textSize="12sp"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 android:textColor="@color/accent_blue"
                 android:background="@drawable/card_focus_selector"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:layout_marginEnd="6dp"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:layout_marginEnd="8dp"
                 android:focusable="true" />
 
             <Button
                 android:id="@+id/btn_speed"
                 android:layout_width="wrap_content"
-                android:layout_height="34dp"
+                android:layout_height="46dp"
                 android:text="1.0x"
                 android:textAllCaps="false"
-                android:textSize="12sp"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 android:textColor="@color/white"
                 android:background="@drawable/card_focus_selector"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
                 android:focusable="true" />
         </LinearLayout>
     </LinearLayout>
@@ -177,14 +183,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|end"
-        android:layout_margin="24dp"
+        android:layout_margin="28dp"
         android:background="#CC1B5E20"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:textColor="@color/white"
-        android:textSize="14sp"
+        android:textSize="19sp"
         android:textStyle="bold"
         android:visibility="gone" />
 
@@ -196,34 +202,35 @@
         android:layout_gravity="center"
         android:orientation="vertical"
         android:gravity="center"
-        android:background="#BB000000"
-        android:padding="22dp">
+        android:background="#CC000000"
+        android:padding="28dp">
 
         <ProgressBar
             android:id="@+id/player_loading"
-            android:layout_width="52dp"
-            android:layout_height="52dp" />
+            android:layout_width="60dp"
+            android:layout_height="60dp" />
 
         <TextView
             android:id="@+id/txt_loading_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="14dp"
             android:text="Đang tải luồng video..."
             android:textColor="@color/white"
-            android:textSize="14sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <!-- Native Error Box -->
     <LinearLayout
         android:id="@+id/error_container"
-        android:layout_width="460dp"
+        android:layout_width="560dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="vertical"
         android:gravity="center"
         android:background="#EE181818"
-        android:padding="24dp"
+        android:padding="28dp"
         android:visibility="gone">
 
         <TextView
@@ -232,8 +239,8 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="@color/white"
-            android:textSize="14sp"
-            android:layout_marginBottom="16dp" />
+            android:textSize="18sp"
+            android:layout_marginBottom="20dp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -243,26 +250,30 @@
             <Button
                 android:id="@+id/btn_retry"
                 android:layout_width="wrap_content"
-                android:layout_height="38dp"
+                android:layout_height="48dp"
                 android:text="Thử lại"
                 android:textAllCaps="false"
+                android:textSize="17sp"
+                android:textStyle="bold"
                 android:textColor="@color/white"
                 android:background="@drawable/card_focus_selector"
-                android:paddingStart="18dp"
-                android:paddingEnd="18dp"
-                android:layout_marginEnd="10dp"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
+                android:layout_marginEnd="14dp"
                 android:focusable="true" />
 
             <Button
                 android:id="@+id/btn_close_player"
                 android:layout_width="wrap_content"
-                android:layout_height="38dp"
+                android:layout_height="48dp"
                 android:text="Quay lại"
                 android:textAllCaps="false"
+                android:textSize="17sp"
+                android:textStyle="bold"
                 android:textColor="@color/white"
                 android:background="@drawable/card_focus_selector"
-                android:paddingStart="18dp"
-                android:paddingEnd="18dp"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
                 android:focusable="true" />
         </LinearLayout>
     </LinearLayout>

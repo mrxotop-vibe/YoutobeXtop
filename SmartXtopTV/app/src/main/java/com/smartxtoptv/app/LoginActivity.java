@@ -14,22 +14,26 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+
 public class LoginActivity extends AppCompatActivity {
 
     private static final String DEVICE_CODE_URL = "https://oauth2.googleapis.com/device/code";
     private static final String TOKEN_URL = "https://oauth2.googleapis.com/token";
+    private static final String UA_COBALT = "Mozilla/5.0 (ChromiumStylePlatform) Cobalt/Version";
     private static final String UA_TV =
             "Mozilla/5.0 (SMART-TV; Linux; Tizen 6.5) AppleWebKit/537.36 " +
             "(KHTML, like Gecko) SamsungBrowser/4.0 Chrome/94.0.4606.112 TV Safari/537.36";
@@ -97,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
         activeDeviceCode = "";
 
         txtDeviceCode.setText("Đang tạo mã...");
-        txtLoginStatus.setText("Đang kết nối Google TV OAuth...");
+        txtLoginStatus.setText("Đang lấy thông tin OAuth từ YouTube TV...");
 
         executor.execute(() -> {
             try {
@@ -112,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (tvCreds == null) {
                         runOnUiThread(() -> {
                             txtDeviceCode.setText("CHƯA CÓ MÃ");
-                            txtLoginStatus.setText("Không tự lấy được YouTube TV Client ID.\nBấm 'Nhập Client ID riêng' (Google Cloud -> TVs & Limited Input devices).");
+                            txtLoginStatus.setText("Không tự lấy được Client ID từ YouTube TV.\nBấm 'Nhập Client ID riêng' (tạo ở Google Cloud -> TVs and Limited Input devices).");
                         });
                         return;
                     }
@@ -120,17 +124,26 @@ public class LoginActivity extends AppCompatActivity {
                     activeClientSecret = tvCreds[1];
                 }
 
-                JSONObject codeResp = requestDeviceCode(activeClientId,
-                        "https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/youtube.readonly");
-                if (codeResp == null || codeResp.has("error")) {
-                    codeResp = requestDeviceCode(activeClientId,
-                            "http://gdata.youtube.com https://www.googleapis.com/auth/youtube-paid-content");
+                runOnUiThread(() -> txtLoginStatus.setText("Đang xin mã kết nối từ Google..."));
+
+                String[] scopes = new String[]{
+                        "https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/youtube.readonly",
+                        "https://www.googleapis.com/auth/youtube",
+                        "http://gdata.youtube.com https://www.googleapis.com/auth/youtube-paid-content"
+                };
+
+                JSONObject codeResp = null;
+                for (String sc : scopes) {
+                    codeResp = requestDeviceCode(activeClientId, sc);
+                    if (codeResp != null && codeResp.has("user_code")) {
+                        break;
+                    }
                 }
 
                 if (codeResp == null) {
                     runOnUiThread(() -> {
                         txtDeviceCode.setText("LỖI MẠNG");
-                        txtLoginStatus.setText("Không kết nối được máy chủ Google OAuth");
+                        txtLoginStatus.setText("Không kết nối được máy chủ Google OAuth (oauth2.googleapis.com)");
                     });
                     return;
                 }
@@ -139,7 +152,7 @@ public class LoginActivity extends AppCompatActivity {
                     String err = codeResp.optString("error", "") + " " + codeResp.optString("error_description", "");
                     runOnUiThread(() -> {
                         txtDeviceCode.setText("LỖI OAUTH");
-                        txtLoginStatus.setText("Google báo lỗi (" + err.trim() + "). Hãy thử 'Nhập Client ID riêng'.");
+                        txtLoginStatus.setText("Google báo lỗi: " + err.trim() + "\nHãy thử 'Nhập Client ID riêng'.");
                     });
                     return;
                 }
@@ -150,9 +163,9 @@ public class LoginActivity extends AppCompatActivity {
                 pollIntervalSec = Math.max(5, codeResp.optInt("interval", 5));
 
                 runOnUiThread(() -> {
-                    txtStep1Url.setText("1. Mở trình duyệt trên điện thoại và truy cập:\n" + verifyUrl);
+                    txtStep1Url.setText("1. Trên điện thoại, mở trình duyệt vào:\n" + verifyUrl);
                     txtDeviceCode.setText(userCode);
-                    txtLoginStatus.setText("Đang chờ bạn xác nhận trên điện thoại (tự kiểm tra mỗi " + pollIntervalSec + "s)...");
+                    txtLoginStatus.setText("2. Nhập mã trên rồi bấm Xác nhận trên điện thoại (tự kiểm tra mỗi " + pollIntervalSec + " giây)...");
                     handler.postDelayed(pollTask, pollIntervalSec * 1000L);
                 });
             } catch (Exception e) {
@@ -230,34 +243,79 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private String[] fetchYoutubeTvClientCredentials() {
-        try {
-            String tvHtml = httpGet("https://www.youtube.com/tv", UA_TV);
-            if (tvHtml == null) return null;
+        String[] userAgents = new String[]{UA_COBALT, UA_TV};
+        for (String ua : userAgents) {
+            String tvHtml = httpGet("https://www.youtube.com/tv", ua);
+            if (tvHtml == null || tvHtml.isEmpty()) continue;
+
+            // 1. Check inline HTML/scripts first
+            String[] inlineCreds = extractClientPairFromText(tvHtml);
+            if (inlineCreds != null) return inlineCreds;
+
+            // 2. Collect all script URLs, prioritizing kabuki / tv / base / main / cobalt bundles
+            List<String> priorityScripts = new ArrayList<>();
+            List<String> otherScripts = new ArrayList<>();
 
             Pattern scriptPattern = Pattern.compile("<script[^>]+src=[\"']([^\"']+)[\"']", Pattern.CASE_INSENSITIVE);
             Matcher m = scriptPattern.matcher(tvHtml);
             while (m.find()) {
                 String src = m.group(1);
-                if (src == null) continue;
+                if (src == null || src.isEmpty()) continue;
                 if (src.startsWith("//")) src = "https:" + src;
                 else if (src.startsWith("/")) src = "https://www.youtube.com" + src;
+                if (!src.startsWith("http")) continue;
 
-                if (!src.contains("tv") && !src.contains("base.js") && !src.contains("cobalt")) continue;
-                String js = httpGet(src, UA_TV);
-                if (js == null) continue;
-
-                Pattern p1 = Pattern.compile(
-                        "([0-9]+-[0-9a-zA-Z_-]{20,}\\.apps\\.googleusercontent\\.com)[\"']\\s*,\\s*(?:clientSecret|secret|client_secret)\\s*:\\s*[\"']([a-zA-Z0-9_-]{18,})[\"']");
-                Matcher cm = p1.matcher(js);
-                if (cm.find()) return new String[]{cm.group(1), cm.group(2)};
-
-                Pattern p2 = Pattern.compile(
-                        "clientId\\s*[:=]\\s*[\"']([0-9]+-[0-9a-zA-Z_-]{20,}\\.apps\\.googleusercontent\\.com)[\"'].{0,180}?clientSecret\\s*[:=]\\s*[\"']([a-zA-Z0-9_-]{18,})[\"']",
-                        Pattern.DOTALL);
-                Matcher cm2 = p2.matcher(js);
-                if (cm2.find()) return new String[]{cm2.group(1), cm2.group(2)};
+                String lower = src.toLowerCase();
+                if (lower.contains("kabuki") || lower.contains("cobalt") || lower.contains("tv")
+                        || lower.contains("base") || lower.contains("main") || lower.contains("app")) {
+                    priorityScripts.add(src);
+                } else {
+                    otherScripts.add(src);
+                }
             }
-        } catch (Exception ignored) {
+
+            List<String> allScripts = new ArrayList<>(priorityScripts);
+            allScripts.addAll(otherScripts);
+
+            for (String src : allScripts) {
+                String js = httpGet(src, ua);
+                if (js == null || js.isEmpty()) continue;
+                String[] creds = extractClientPairFromText(js);
+                if (creds != null) return creds;
+            }
+        }
+        return null;
+    }
+
+    private static String[] extractClientPairFromText(String text) {
+        if (text == null || text.isEmpty()) return null;
+
+        Pattern[] patterns = new Pattern[]{
+                // clientId followed closely by clientSecret (handles kabuki/cobalt minified JS & single/double quotes)
+                Pattern.compile(
+                        "(?:clientId|client_id)\\s*[:=]\\s*[\"']([0-9]+-[0-9a-zA-Z_-]{16,}\\.apps\\.googleusercontent\\.com)[\"'].{0,400}?(?:clientSecret|client_secret|secret)\\s*[:=]\\s*[\"']([a-zA-Z0-9_-]{16,})[\"']",
+                        Pattern.DOTALL),
+                // reversed order: clientSecret then clientId
+                Pattern.compile(
+                        "(?:clientSecret|client_secret|secret)\\s*[:=]\\s*[\"']([a-zA-Z0-9_-]{16,})[\"'].{0,400}?(?:clientId|client_id)\\s*[:=]\\s*[\"']([0-9]+-[0-9a-zA-Z_-]{16,}\\.apps\\.googleusercontent\\.com)[\"']",
+                        Pattern.DOTALL),
+                // direct literal pair in object/array e.g. "xxx.apps.googleusercontent.com", secret:"yyy" or GOCSPX-...
+                Pattern.compile(
+                        "[\"']([0-9]+-[0-9a-zA-Z_-]{16,}\\.apps\\.googleusercontent\\.com)[\"'].{0,220}?(?:clientSecret|secret|client_secret)\\s*[:=]\\s*[\"']([a-zA-Z0-9_-]{16,})[\"']",
+                        Pattern.DOTALL),
+                Pattern.compile(
+                        "[\"']([0-9]+-[0-9a-zA-Z_-]{16,}\\.apps\\.googleusercontent\\.com)[\"']\\s*,\\s*[\"'](GOCSPX-[a-zA-Z0-9_-]{12,}|[a-zA-Z0-9_-]{20,36})[\"']",
+                        Pattern.DOTALL)
+        };
+
+        for (int i = 0; i < patterns.length; i++) {
+            Matcher cm = patterns[i].matcher(text);
+            if (cm.find()) {
+                if (i == 1) {
+                    return new String[]{cm.group(2), cm.group(1)};
+                }
+                return new String[]{cm.group(1), cm.group(2)};
+            }
         }
         return null;
     }
@@ -269,18 +327,20 @@ public class LoginActivity extends AppCompatActivity {
 
         TextView hint = new TextView(this);
         hint.setText("Tạo trong Google Cloud Console -> Credentials -> OAuth Client ID (TVs and Limited Input devices):");
-        hint.setTextSize(13f);
+        hint.setTextSize(17f);
         layout.addView(hint);
 
         EditText edtId = new EditText(this);
         edtId.setHint("Client ID (xxx.apps.googleusercontent.com)");
         edtId.setText(authManager.getCustomClientId());
+        edtId.setTextSize(17f);
         edtId.setSingleLine(true);
         layout.addView(edtId);
 
         EditText edtSecret = new EditText(this);
         edtSecret.setHint("Client Secret");
         edtSecret.setText(authManager.getCustomClientSecret());
+        edtSecret.setTextSize(17f);
         edtSecret.setSingleLine(true);
         layout.addView(edtSecret);
 
@@ -309,51 +369,39 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private static HttpResponse httpPostForm(String urlStr, String formBody) {
-        HttpURLConnection conn = null;
         try {
-            conn = AppConfig.openSecureConnection(urlStr);
-            conn.setRequestMethod("POST");
-            conn.setDoOutput(true);
-            conn.setConnectTimeout(10000);
-            conn.setReadTimeout(10000);
-            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            try (OutputStream os = conn.getOutputStream()) {
-                os.write(formBody.getBytes(StandardCharsets.UTF_8));
+            OkHttpClient client = DownloaderImpl.getInstance().getClient();
+            RequestBody body = RequestBody.create(formBody, MediaType.parse("application/x-www-form-urlencoded; charset=utf-8"));
+            Request req = new Request.Builder()
+                    .url(urlStr)
+                    .post(body)
+                    .build();
+            try (Response resp = client.newCall(req).execute()) {
+                ResponseBody rb = resp.body();
+                return new HttpResponse(resp.code(), rb != null ? rb.string() : "");
             }
-            int code = conn.getResponseCode();
-            InputStream is = code >= 200 && code < 400 ? conn.getInputStream() : conn.getErrorStream();
-            if (is == null) return new HttpResponse(code, null);
-            BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) sb.append(line);
-            br.close();
-            return new HttpResponse(code, sb.toString());
         } catch (Exception e) {
             return new HttpResponse(-1, null);
-        } finally {
-            if (conn != null) conn.disconnect();
         }
     }
 
     private static String httpGet(String urlStr, String userAgent) {
-        HttpURLConnection conn = null;
         try {
-            conn = AppConfig.openSecureConnection(urlStr);
-            conn.setConnectTimeout(10000);
-            conn.setReadTimeout(12000);
-            conn.setRequestProperty("User-Agent", userAgent);
-            if (conn.getResponseCode() >= 200 && conn.getResponseCode() < 300) {
-                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
-                StringBuilder sb = new StringBuilder();
-                String line;
-                while ((line = br.readLine()) != null) sb.append(line);
-                br.close();
-                return sb.toString();
+            OkHttpClient client = DownloaderImpl.getInstance().getClient();
+            Request req = new Request.Builder()
+                    .url(urlStr)
+                    .header("User-Agent", userAgent)
+                    .header("Accept", "text/html,application/xhtml+xml,application/javascript,*/*;q=0.8")
+                    .header("Accept-Language", "vi-VN,vi;q=0.9,en-US;q=0.8")
+                    .get()
+                    .build();
+            try (Response resp = client.newCall(req).execute()) {
+                if (resp.isSuccessful()) {
+                    ResponseBody rb = resp.body();
+                    return rb != null ? rb.string() : null;
+                }
             }
         } catch (Exception ignored) {
-        } finally {
-            if (conn != null) conn.disconnect();
         }
         return null;
     }

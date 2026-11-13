@@ -25,6 +25,7 @@ public class AppConfig {
     public static final int QUALITY_720P = 0;
     public static final int QUALITY_HLS_AUTO = 1;
     public static final int QUALITY_360P = 2;
+    public static final int QUALITY_1080P = 3;
 
     private static final String PREFS = "smartxtoptv_settings";
     private static final String KEY_QUALITY = "default_quality";
@@ -41,7 +42,7 @@ public class AppConfig {
     }
 
     public int getDefaultQuality() {
-        return prefs.getInt(KEY_QUALITY, QUALITY_720P);
+        return prefs.getInt(KEY_QUALITY, QUALITY_1080P);
     }
 
     public void setDefaultQuality(int q) {
@@ -74,9 +75,10 @@ public class AppConfig {
 
     public String getQualityLabel() {
         int q = getDefaultQuality();
-        if (q == QUALITY_HLS_AUTO) return "Auto HLS (720p/1080p)";
-        if (q == QUALITY_360P) return "360p MP4 (Tiết kiệm)";
-        return "720p MP4 (Mượt 5.1)";
+        if (q == QUALITY_1080P) return "1080p Full HD (Nét nhất)";
+        if (q == QUALITY_HLS_AUTO) return "Auto HLS";
+        if (q == QUALITY_360P) return "360p (Tiết kiệm)";
+        return "720p HD (Mượt 5.1)";
     }
 
     /**

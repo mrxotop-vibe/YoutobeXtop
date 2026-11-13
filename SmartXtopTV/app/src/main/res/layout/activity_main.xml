@@ -5,24 +5,24 @@
     android:orientation="horizontal"
     android:background="@color/black">
 
-    <!-- SmartTube / TizenCobalt Left Sidebar -->
+    <!-- SmartTube Style Spacious Left Sidebar -->
     <LinearLayout
-        android:layout_width="185dp"
+        android:layout_width="240dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@color/sidebar_bg"
-        android:padding="10dp">
+        android:padding="12dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="SmartXtop"
             android:textColor="@color/red"
-            android:textSize="20sp"
+            android:textSize="26sp"
             android:textStyle="bold"
             android:gravity="center"
             android:paddingTop="4dp"
-            android:paddingBottom="10dp" />
+            android:paddingBottom="12dp" />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -38,119 +38,143 @@
                 <Button
                     android:id="@+id/nav_login"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="52dp"
                     android:gravity="start|center_vertical"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="8dp"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="10dp"
                     android:text="👤 Đăng nhập"
                     android:textAllCaps="false"
+                    android:singleLine="true"
+                    android:ellipsize="end"
                     android:textColor="@color/white"
-                    android:textSize="13sp"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
                     android:background="@drawable/sidebar_item_selector"
-                    android:layout_marginBottom="4dp"
+                    android:layout_marginBottom="6dp"
                     android:focusable="true" />
 
                 <Button
                     android:id="@+id/nav_home"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="52dp"
                     android:gravity="start|center_vertical"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="8dp"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="10dp"
                     android:text="🏠 Trang chủ"
                     android:textAllCaps="false"
+                    android:singleLine="true"
+                    android:ellipsize="end"
                     android:textColor="@color/white"
-                    android:textSize="13sp"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
                     android:background="@drawable/sidebar_item_selector"
-                    android:layout_marginBottom="4dp"
+                    android:layout_marginBottom="6dp"
                     android:focusable="true" />
 
                 <Button
                     android:id="@+id/nav_trending"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="52dp"
                     android:gravity="start|center_vertical"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="8dp"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="10dp"
                     android:text="🔥 Thịnh hành"
                     android:textAllCaps="false"
+                    android:singleLine="true"
+                    android:ellipsize="end"
                     android:textColor="@color/white"
-                    android:textSize="13sp"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
                     android:background="@drawable/sidebar_item_selector"
-                    android:layout_marginBottom="4dp"
+                    android:layout_marginBottom="6dp"
                     android:focusable="true" />
 
                 <Button
                     android:id="@+id/nav_subs"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="52dp"
                     android:gravity="start|center_vertical"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="8dp"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="10dp"
                     android:text="📺 Kênh đăng ký"
                     android:textAllCaps="false"
+                    android:singleLine="true"
+                    android:ellipsize="end"
                     android:textColor="@color/white"
-                    android:textSize="13sp"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
                     android:background="@drawable/sidebar_item_selector"
-                    android:layout_marginBottom="4dp"
+                    android:layout_marginBottom="6dp"
                     android:focusable="true" />
 
                 <Button
                     android:id="@+id/nav_music"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="52dp"
                     android:gravity="start|center_vertical"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="8dp"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="10dp"
                     android:text="🎵 Âm nhạc"
                     android:textAllCaps="false"
+                    android:singleLine="true"
+                    android:ellipsize="end"
                     android:textColor="@color/white"
-                    android:textSize="13sp"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
                     android:background="@drawable/sidebar_item_selector"
-                    android:layout_marginBottom="4dp"
+                    android:layout_marginBottom="6dp"
                     android:focusable="true" />
 
                 <Button
                     android:id="@+id/nav_gaming"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="52dp"
                     android:gravity="start|center_vertical"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="8dp"
-                    android:text="🎮 Giải trí / Game"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="10dp"
+                    android:text="🎮 Giải trí"
                     android:textAllCaps="false"
+                    android:singleLine="true"
+                    android:ellipsize="end"
                     android:textColor="@color/white"
-                    android:textSize="13sp"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
                     android:background="@drawable/sidebar_item_selector"
-                    android:layout_marginBottom="4dp"
+                    android:layout_marginBottom="6dp"
                     android:focusable="true" />
 
                 <Button
                     android:id="@+id/nav_history"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="52dp"
                     android:gravity="start|center_vertical"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="8dp"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="10dp"
                     android:text="🕘 Lịch sử xem"
                     android:textAllCaps="false"
+                    android:singleLine="true"
+                    android:ellipsize="end"
                     android:textColor="@color/white"
-                    android:textSize="13sp"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
                     android:background="@drawable/sidebar_item_selector"
-                    android:layout_marginBottom="4dp"
+                    android:layout_marginBottom="6dp"
                     android:focusable="true" />
 
                 <Button
                     android:id="@+id/nav_settings"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="52dp"
                     android:gravity="start|center_vertical"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="8dp"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="10dp"
                     android:text="⚙️ Cài đặt"
                     android:textAllCaps="false"
+                    android:singleLine="true"
+                    android:ellipsize="end"
                     android:textColor="@color/white"
-                    android:textSize="13sp"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
                     android:background="@drawable/sidebar_item_selector"
                     android:focusable="true" />
 
@@ -163,9 +187,9 @@
             android:layout_height="wrap_content"
             android:text="Android 5.1+ Native"
             android:textColor="@color/gray"
-            android:textSize="11sp"
+            android:textSize="13sp"
             android:gravity="center"
-            android:paddingTop="6dp" />
+            android:paddingTop="8dp" />
     </LinearLayout>
 
     <!-- Right Main Panel -->
@@ -174,7 +198,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:padding="12dp">
+        android:padding="14dp">
 
         <!-- Quick Search Bar -->
         <LinearLayout
@@ -182,20 +206,20 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="10dp">
 
             <EditText
                 android:id="@+id/edit_search"
                 android:layout_width="0dp"
-                android:layout_height="38dp"
+                android:layout_height="50dp"
                 android:layout_weight="1"
-                android:background="#202020"
+                android:background="#242424"
                 android:hint="@string/search_hint"
                 android:textColor="@color/white"
-                android:textColorHint="@color/gray"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:textSize="13sp"
+                android:textColorHint="#BBBBBB"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textSize="18sp"
                 android:singleLine="true"
                 android:imeOptions="actionSearch"
                 android:focusable="true" />
@@ -203,15 +227,16 @@
             <Button
                 android:id="@+id/btn_search"
                 android:layout_width="wrap_content"
-                android:layout_height="38dp"
-                android:layout_marginStart="8dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="10dp"
                 android:text="Tìm kiếm"
                 android:textAllCaps="false"
-                android:textSize="13sp"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 android:textColor="@color/white"
                 android:background="@drawable/card_focus_selector"
-                android:paddingStart="14dp"
-                android:paddingEnd="14dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
                 android:focusable="true" />
         </LinearLayout>
 
@@ -220,7 +245,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="10dp">
 
             <TextView
                 android:id="@+id/txt_section_title"
@@ -229,16 +254,17 @@
                 android:layout_weight="1"
                 android:text="🏠 Trang chủ"
                 android:textColor="@color/white"
-                android:textSize="16sp"
+                android:textSize="22sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/txt_status_pills"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="SponsorBlock ✓  |  720p"
+                android:text="SponsorBlock ✓  |  1080p"
                 android:textColor="@color/accent_green"
-                android:textSize="11sp" />
+                android:textSize="15sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <FrameLayout
@@ -251,12 +277,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                android:paddingBottom="8dp" />
+                android:paddingBottom="10dp" />
 
             <ProgressBar
                 android:id="@+id/progress_loading"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
                 android:layout_gravity="center"
                 android:visibility="gone" />
         </FrameLayout>

@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.schabi.newpipe.extractor.Image;
 import org.schabi.newpipe.extractor.InfoItem;
+import org.schabi.newpipe.extractor.MediaFormat;
 import org.schabi.newpipe.extractor.ServiceList;
 import org.schabi.newpipe.extractor.StreamingService;
 import org.schabi.newpipe.extractor.kiosk.KioskInfo;
@@ -47,12 +48,17 @@ public class YouTubeExtractorService {
         public final String videoUrl;
         public final String audioUrl;
         public final boolean isHls;
+        public final int height;
+        public final boolean isMp4;
         public final String label;
 
-        public StreamCandidate(String videoUrl, String audioUrl, boolean isHls, String label) {
+        public StreamCandidate(String videoUrl, String audioUrl, boolean isHls,
+                               int height, boolean isMp4, String label) {
             this.videoUrl = videoUrl;
             this.audioUrl = audioUrl;
             this.isHls = isHls;
+            this.height = height;
+            this.isMp4 = isMp4;
             this.label = label;
         }
     }
@@ -181,53 +187,52 @@ public class YouTubeExtractorService {
                 String bestAudioUrl = pickBestAudioUrl(info.getAudioStreams());
 
                 List<StreamCandidate> candidates = new ArrayList<>();
+                Set<String> seenLabels = new HashSet<>();
 
-                // Progressive combined MP4 streams (video + audio together)
-                List<StreamCandidate> muxed = new ArrayList<>();
-                if (info.getVideoStreams() != null) {
-                    for (VideoStream vs : info.getVideoStreams()) {
-                        String u = vs.getContent();
-                        if (u == null || u.isEmpty()) continue;
-                        String res = vs.getResolution() != null ? vs.getResolution() : "MP4";
-                        muxed.add(new StreamCandidate(u, null, false, res + " (MP4)"));
-                    }
-                }
-
-                // Adaptive video-only streams merged with audio via ExoPlayer MergingMediaSource (720p/1080p)
-                List<StreamCandidate> dashPairs = new ArrayList<>();
+                // Adaptive video-only streams merged with audio via ExoPlayer MergingMediaSource (1080p/720p/480p)
                 if (bestAudioUrl != null && !bestAudioUrl.isEmpty() && info.getVideoOnlyStreams() != null) {
                     for (VideoStream vs : info.getVideoOnlyStreams()) {
                         String u = vs.getContent();
                         if (u == null || u.isEmpty()) continue;
                         String res = vs.getResolution() != null ? vs.getResolution() : "HD";
-                        String fmt = vs.getFormat() != null ? vs.getFormat().getName() : "DASH";
-                        dashPairs.add(new StreamCandidate(u, bestAudioUrl, false, res + " (" + fmt + " + Audio)"));
+                        int h = parseResolution(res);
+                        MediaFormat mf = vs.getFormat();
+                        boolean isMp4 = (mf == MediaFormat.MPEG_4);
+                        String fmtName = (mf != null && mf.getSuffix() != null)
+                                ? mf.getSuffix().toUpperCase(Locale.US)
+                                : (mf != null ? mf.getName() : "DASH");
+                        String lbl = res + " (" + fmtName + " + Audio)";
+                        if (seenLabels.add(lbl)) {
+                            candidates.add(new StreamCandidate(u, bestAudioUrl, false, h, isMp4, lbl));
+                        }
                     }
-                    // Sort highest/preferred resolution nicely: put H.264/MPEG_4 720p/1080p near top for Android 5.1
-                    dashPairs.sort((a, b) -> scoreCandidate(b, prefQuality) - scoreCandidate(a, prefQuality));
+                }
+
+                // Progressive combined MP4 streams (video + audio together, typically 360p)
+                if (info.getVideoStreams() != null) {
+                    for (VideoStream vs : info.getVideoStreams()) {
+                        String u = vs.getContent();
+                        if (u == null || u.isEmpty()) continue;
+                        String res = vs.getResolution() != null ? vs.getResolution() : "MP4";
+                        int h = parseResolution(res);
+                        MediaFormat mf = vs.getFormat();
+                        boolean isMp4 = (mf == null || mf == MediaFormat.MPEG_4);
+                        String fmtName = (mf != null && mf.getSuffix() != null)
+                                ? mf.getSuffix().toUpperCase(Locale.US)
+                                : "MP4";
+                        String lbl = res + " (" + fmtName + " Gộp)";
+                        if (seenLabels.add(lbl)) {
+                            candidates.add(new StreamCandidate(u, null, false, h, isMp4, lbl));
+                        }
+                    }
                 }
 
                 String hlsUrl = info.getHlsUrl();
-                StreamCandidate hlsCand = (hlsUrl != null && !hlsUrl.isEmpty())
-                        ? new StreamCandidate(hlsUrl, null, true, "HLS Adaptive")
-                        : null;
-
-                if (prefQuality == AppConfig.QUALITY_HLS_AUTO) {
-                    if (hlsCand != null) candidates.add(hlsCand);
-                    candidates.addAll(dashPairs);
-                    candidates.addAll(muxed);
-                } else if (prefQuality == AppConfig.QUALITY_360P) {
-                    // Put lower MP4 first for slow networks
-                    candidates.addAll(muxed);
-                    candidates.addAll(dashPairs);
-                    if (hlsCand != null) candidates.add(hlsCand);
-                } else {
-                    // Default Android 5.1 smooth 720p: prefer 720p DASH H264 or 720p muxed, then others
-                    candidates.addAll(dashPairs);
-                    candidates.addAll(muxed);
-                    if (hlsCand != null) candidates.add(hlsCand);
-                    candidates.sort((a, b) -> scoreCandidate(b, prefQuality) - scoreCandidate(a, prefQuality));
+                if (hlsUrl != null && !hlsUrl.isEmpty()) {
+                    candidates.add(new StreamCandidate(hlsUrl, null, true, 720, true, "HLS Adaptive (Tự động)"));
                 }
+
+                candidates.sort((a, b) -> scoreCandidate(b, prefQuality) - scoreCandidate(a, prefQuality));
 
                 if (candidates.isEmpty()) {
                     callback.onError("NewPipeExtractor không tìm thấy luồng phát cho video này.");
@@ -241,21 +246,37 @@ public class YouTubeExtractorService {
     }
 
     private static int scoreCandidate(StreamCandidate c, int prefQuality) {
-        String lbl = c.label.toLowerCase(Locale.US);
-        int score = 0;
-        if (lbl.contains("mpeg_4") || lbl.contains("mp4")) score += 500; // Hardware decoded smoothly on Android 5.1
-        int res = parseResolution(lbl);
-        if (prefQuality == AppConfig.QUALITY_360P) {
-            if (res == 360) score += 400;
-            else if (res == 480) score += 300;
-            else if (res == 720) score += 150;
-        } else {
-            if (res == 720) score += 450;
-            else if (res == 1080) score += 380;
-            else if (res == 480) score += 250;
-            else if (res == 360) score += 180;
+        if (c.isHls) {
+            return (prefQuality == AppConfig.QUALITY_HLS_AUTO) ? 2000 : 350;
         }
-        if (c.isHls && prefQuality == AppConfig.QUALITY_HLS_AUTO) score += 800;
+
+        int score = c.isMp4 ? 1000 : 0; // Hardware decoded smoothly on Android 5.1 TV Box
+        int h = c.height;
+
+        if (prefQuality == AppConfig.QUALITY_360P) {
+            if (h == 360) score += 600;
+            else if (h == 480) score += 450;
+            else if (h == 720) score += 300;
+            else if (h == 1080) score += 200;
+            else if (h > 0) score += 100;
+            if (c.audioUrl == null) score += 50;
+        } else if (prefQuality == AppConfig.QUALITY_720P) {
+            if (h == 720) score += 700;
+            else if (h == 1080) score += 550;
+            else if (h == 480) score += 420;
+            else if (h == 360) score += 250;
+            else if (h >= 1440) score += 200;
+            else if (h > 0) score += 100;
+        } else {
+            // Default QUALITY_1080P: 1080p -> 720p -> 480p -> 360p (avoid 4K 2160p on Android 5.1 hardware)
+            if (h == 1080) score += 750;
+            else if (h == 720) score += 650;
+            else if (h == 480) score += 450;
+            else if (h == 360) score += 250;
+            else if (h == 1440) score += 300;
+            else if (h >= 2160) score += 100;
+            else if (h > 0) score += 120;
+        }
         return score;
     }
 
@@ -279,8 +300,7 @@ public class YouTubeExtractorService {
             if (bestAny == null || as.getAverageBitrate() > bestAny.getAverageBitrate()) {
                 bestAny = as;
             }
-            String fmt = as.getFormat() != null ? as.getFormat().getName().toUpperCase(Locale.US) : "";
-            if (fmt.contains("M4A")) {
+            if (as.getFormat() == MediaFormat.M4A) {
                 if (bestM4a == null || as.getAverageBitrate() > bestM4a.getAverageBitrate()) {
                     bestM4a = as;
                 }

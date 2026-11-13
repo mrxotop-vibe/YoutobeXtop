@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         navSettings = findViewById(R.id.nav_settings);
         Button btnSearch = findViewById(R.id.btn_search);
 
-        recyclerVideos.setLayoutManager(new GridLayoutManager(this, 3));
+        recyclerVideos.setLayoutManager(new GridLayoutManager(this, 2));
         adapter = new VideoAdapter(this, videoList, this::openPlayerAt);
         recyclerVideos.setAdapter(adapter);
 

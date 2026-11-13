@@ -3,15 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="6dp"
-    android:layout_margin="5dp"
+    android:padding="8dp"
+    android:layout_margin="8dp"
     android:focusable="true"
     android:clickable="true"
     android:background="@drawable/card_focus_selector">
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="122dp"
+        android:layout_height="172dp"
         android:background="#262626">
 
         <ImageView
@@ -25,14 +25,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
-            android:layout_margin="5dp"
-            android:background="#CC000000"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:paddingTop="1dp"
-            android:paddingBottom="1dp"
+            android:layout_margin="6dp"
+            android:background="#DD000000"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
             android:textColor="@color/white"
-            android:textSize="10sp"
+            android:textSize="14sp"
             android:textStyle="bold"
             android:visibility="gone" />
     </FrameLayout>
@@ -40,22 +40,23 @@
     <TextView
         android:id="@+id/txt_title"
         android:layout_width="match_parent"
-        android:layout_height="38dp"
-        android:layout_marginTop="5dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="8dp"
         android:maxLines="2"
+        android:lineSpacingExtra="2dp"
         android:ellipsize="end"
         android:textColor="@color/white"
-        android:textSize="13sp"
+        android:textSize="19sp"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/txt_uploader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="4dp"
         android:singleLine="true"
         android:ellipsize="end"
-        android:textColor="@color/gray"
-        android:textSize="11sp" />
+        android:textColor="#CCCCCC"
+        android:textSize="15sp" />
 
 </LinearLayout>
